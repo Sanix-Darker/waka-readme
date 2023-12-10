@@ -283,16 +283,16 @@ def prep_content(stats: dict[str, Any], /):
 
     # make title
     if wk_i.show_title:
-        contents += make_title(stats.get("start"), stats.get("end")) + "\n\n"
+        contents += make_title(stats.get("start"), stats.get("end")) + ",\n\n"
 
     # make byline
     if wk_i.show_masked_time and (
         total_time := stats.get("human_readable_total_including_other_language")
     ):
         # overrides "human_readable_total"
-        contents += f"Total Time: {total_time}\n\n"
+        contents += f"Coding time : {total_time}.\n\n"
     elif wk_i.show_total_time and (total_time := stats.get("human_readable_total")):
-        contents += f"Total Time: {total_time}\n\n"
+        contents += f"Coding time : {total_time}.\n\n"
 
     lang_info: list[dict[str, int | float | str]] | None = []
 
