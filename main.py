@@ -48,7 +48,7 @@ from requests.exceptions import RequestException
 
 ################### setup ###################
 
-_PRE_TITLE = "Hi, am darker.\n\n"
+_PRE_TITLE = "Hi, am dk.\n\n"
 
 print()
 # hush existing loggers
@@ -290,9 +290,9 @@ def prep_content(stats: dict[str, Any], /):
         total_time := stats.get("human_readable_total_including_other_language")
     ):
         # overrides "human_readable_total"
-        contents += f"Coding time : {total_time}.\n\n"
+        contents += f"This is my coding time : {total_time}.\n\n"
     elif wk_i.show_total_time and (total_time := stats.get("human_readable_total")):
-        contents += f"Coding time : {total_time}.\n\n"
+        contents += f"This is my coding time : {total_time}.\n\n"
 
     lang_info: list[dict[str, int | float | str]] | None = []
 
