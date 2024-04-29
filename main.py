@@ -48,6 +48,8 @@ from requests.exceptions import RequestException
 
 ################### setup ###################
 
+_PRE_TITLE = "Hi, am dk.\n\n"
+
 print()
 # hush existing loggers
 for lgr_name in logger.root.manager.loggerDict:
@@ -250,7 +252,7 @@ def make_title(dawn: str | None, dusk: str | None, /):
         sys.exit(1)
 
     logger.debug("Title was made\n")
-    return f"From: {start_date} - To: {end_date}"
+    return f"{_PRE_TITLE}From: {start_date} - To: {end_date}"
 
 
 def make_graph(block_style: str, percent: float, gr_len: int, lg_nm: str = "", /):
