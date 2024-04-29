@@ -294,8 +294,6 @@ def prep_content(stats: dict[str, Any], /):
     elif wk_i.show_total_time and (total_time := stats.get("human_readable_total")):
         contents += f"Coding time : {total_time}.\n\n"
 
-    contents += "\nCheck sanixdk.xyz for more.\n\n"
-
     lang_info: list[dict[str, int | float | str]] | None = []
 
     # Check if any language data exists
@@ -338,6 +336,8 @@ def prep_content(stats: dict[str, Any], /):
             break
         if idx + 1 >= language_count > 0:  # idx starts at 0
             break
+
+    contents += "\nCheck sanixdk.xyz for more.\n\n"
 
     logger.debug("Contents were made\n")
     return contents.rstrip("\n")
