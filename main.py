@@ -337,8 +337,6 @@ def prep_content(stats: dict[str, Any], /):
         if idx + 1 >= language_count > 0:  # idx starts at 0
             break
 
-    contents += "\nCheck sanixdk.xyz for more.\n\n"
-
     logger.debug("Contents were made\n")
     return contents.rstrip("\n")
 
@@ -407,7 +405,7 @@ def churn(old_readme: str, /):
     # substituting old contents
     new_readme = re.sub(
         pattern=wk_i.waka_block_pattern,
-        repl=f"{wk_i.start_comment}\n\n```{wk_i.code_lang}\n{generated_content}\n```\n\n{wk_i.end_comment}",
+        repl=f"{wk_i.start_comment}\n\n```{wk_i.code_lang}\n{generated_content}\n```\nCheck [sanixdk.xyz](https://sanixdk.xyz) for more.\n\n{wk_i.end_comment}",
         string=old_readme,
     )
     if len(sys.argv) == 2 and sys.argv[1] == "--dev":
