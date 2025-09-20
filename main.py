@@ -243,17 +243,24 @@ def make_title(dawn: str | None, dusk: str | None, /):
     if not dawn or not dusk:
         logger.error("Cannot find start/end date\n")
         sys.exit(1)
-    api_dfm, msg_dfm = "%Y-%m-%dT%H:%M:%SZ", "%d %B %Y"
+
+    msg_dfm = "%d %B %Y"
     try:
-        start_date = datetime.strptime(dawn, api_dfm).strftime(msg_dfm)
-        end_date = datetime.strptime(dusk, api_dfm).strftime(msg_dfm)
-    except ValueError as err:
+        start_date = parse_iso_date(dawn).strftime(msg_dfm)
+        end_date = parse_iso_date(dusk).strftime(msg_dfm)
+    except (ValueError, TypeError) as err:
         logger.error(f"{err}\n")
         sys.exit(1)
 
     logger.debug("Title was made\n")
     return f"{_PRE_TITLE}From: {start_date} - To: {end_date}"
 
+def parse_iso_date(date_str: str) -> datetime:
+    """Parse ISO date string handling various timezone formats."""
+    clean_date: str = re.sub(r'([+-]\d{2}):?(\d{2})$|Z$', '', date_str)
+    if 'T' in clean_date:
+        return datetime.fromisoformat(clean_date)
+    return datetime.strptime(clean_date, '%Y-%m-%d %H:%M:%S')
 
 def make_graph(block_style: str, percent: float, gr_len: int, lg_nm: str = "", /):
     """WakaReadme Graph.
@@ -274,14 +281,14 @@ def make_graph(block_style: str, percent: float, gr_len: int, lg_nm: str = "", /
 
 def _extract_ignored_languages():
     if not wk_i.ignored_languages:
-        return False
+        return ""
     temp = ""
     for igl in wk_i.ignored_languages.strip().split():
-        if igl.startswith('"'):
-            temp = igl
+        if igl.startswith(('"', "'")):
+            temp = igl.lstrip('"').lstrip("'")
             continue
-        if igl.endswith('"'):
-            igl = f"{temp} {igl}"
+        if igl.endswith(('"', "'")):
+            igl = f"{temp} {igl.rstrip('"').rstrip("'")}"
             temp = ""
         yield igl
 
@@ -330,10 +337,11 @@ def prep_content(stats: dict[str, Any], /):
         )
         return contents.rstrip("\n")
 
-    ignored_languages = _extract_ignored_languages()
+    ignored_languages = set(_extract_ignored_languages())
+    logger.debug(f"Ignoring {', '.join(ignored_languages)}")
     for idx, lang in enumerate(lang_info):
         lang_name = str(lang["name"])
-        if ignored_languages and lang_name in ignored_languages:
+        if lang_name in ignored_languages:
             continue
         lang_time = str(lang["text"]) if wk_i.show_time else ""
         lang_ratio = float(lang["percent"])
